@@ -18,7 +18,23 @@
       if(this.getConfig()) {
       	$.extend(this.config,this.getConfig());
       }
-      console.log(this.config);
+
+      // 保存tab标签列表,对应的内容列表
+      this.tabItems = this.tab.find("ul.tab-nav li");
+      this.contentItems = this.tab.find("div.content-wrap div.content-item");
+
+      // 保存配置参数
+      var config = this.config;
+
+      if(config.triggerType==="click") {
+      	this.tabItems.bind(config.triggerType, function() {
+      		alert(1);
+      	})
+      } else if(config.triggerType==="mouseover" || config.triggerType!="click") {
+      	this.tabItems.mouseover(function() {
+      		alert(2);
+      	})
+      }
 	};
 
 	Tab.prototype = {  
