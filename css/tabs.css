@@ -50,6 +50,7 @@ body {
 }
 
 .tab .content-wrap .content-item {
+	position: absolute;
 	height: 200px;
 	display: none;
 }
