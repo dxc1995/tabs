@@ -30,14 +30,45 @@
       	this.tabItems.bind(config.triggerType, function() {
       		_this_.invoke($(this));
       	})
-      } else if(config.triggerType==="mouseover" || config.triggerType!="click") {
-      	this.tabItems.mouseover(function() {
-      		_this_.invoke($(this));
-      	})
+      }else if(config.triggerType==="mouseover" || config.triggerType!="click") {
+      	 this.tabItems.bind("mouseover", function(event) {
+            _this_.invoke($(this));
+            event.stopPropagation(); //阻止事件冒泡
+      	 })
+      };
+      // 自动切换功能,当配置了时间,我们就根据时间间隔自动进行切换
+      if(config.auto) {
+      	// 定义一个全局定时器
+      	this.timer = null;
+      	//计数器
+      	this.loop = 0;
+        this.autoPlay();
+
+        this.tab.hover(function(){
+           window.clearInterval(_this_.timer);
+        },function(){
+           _this_.autoPlay();
+        });
       }
 	};
 
 	Tab.prototype = {  
+	  // 自动间隔时间切换
+	  autoPlay: function() {
+	  	  var _this_    = this,
+	  	      tabItems  = this.tabItems, // 临时保存tab列表
+	  	      tabLength = tabItems.length, //tab的个数
+	  	      config    = this.config;  
+
+	  	  this.timer = window.setInterval(function() {
+	  	  	_this_.loop++;
+	  	  	if(_this_.loop >= tabLength) {
+                _this_.loop = 0;
+	  	  	}
+
+	  	  	tabItems.eq(_this_.loop).trigger(config.triggerType);
+	  	  },config.auto);
+	  },
 	  // 事件驱动函数
 	  invoke: function(currentTab) {
 	  	var _this_ = this;
@@ -57,6 +88,11 @@
            conItems.eq(index).addClass("current").siblings().removeClass("current");
 	  	} else if(effect === "fade") {
            conItems.eq(index).fadeIn().siblings().fadeOut();
+	  	}
+
+	  	// 注意如果设置了自动切换,记得把当前的loop值设置成当前tab的index
+	  	if(this.config.auto) {
+	  		this.loop = index; 
 	  	}
 	  },
       // 获取配置参数
