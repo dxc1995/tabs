@@ -113,5 +113,22 @@
       }
 	};
 
+	Tab.init = function(tabs) {
+		var _this_ = this;
+		tabs.each(function(){
+			new _this_($(this))
+		})
+	}
+
+	//注册jquery方法
+	$.fn.extend({
+		tab: function() {
+			this.each(function(){
+				new Tab($(this));
+			})
+			return this;
+		}
+	})
+
 	window.Tab = Tab;
 })(jQuery);
