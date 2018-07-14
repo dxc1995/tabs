@@ -50,6 +50,11 @@
            _this_.autoPlay();
         });
       }
+
+      // 设置默认显示第几个tab
+      if(config.invoke > 1) {
+      	 this.invoke(this.tabItems.eq(config.invoke - 1));
+      }
 	};
 
 	Tab.prototype = {  
